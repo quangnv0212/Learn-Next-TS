@@ -44,6 +44,7 @@ export const getStaticProps: GetStaticProps<{ blog: Blog }> = async (
   if (!slug) return { notFound: true };
   const blog = blogList.find((x: Blog) => x.attributes.slug == slug);
   if (!blog) return { notFound: true };
+  console.log(blog);
   return {
     props: {
       blog,
