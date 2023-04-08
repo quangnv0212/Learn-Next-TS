@@ -25,14 +25,16 @@ export default function BlogPage({ blog }: slugAlbumProps) {
   );
 }
 export const getStaticPaths: GetStaticPaths = async () => {
-  const res = await fetch("https://backoffice.nodemy.vn/api/blogs?populate=*");
+  const res = await fetch(
+    "https://backoffice.nodemy.vn/api/blogs?pagination[page]=1&pagination[pageSize]=3&populate=*"
+  );
   const { data } = await res.json();
   const blogList: Blog[] = data;
   return {
     paths: blogList.map((blog: Blog) => ({
       params: { slugBlog: blog.attributes.slug },
     })),
-    fallback: false, // See the "fallback" section below
+    fallback: true, // See the "fallback" section below
   };
 };
 export const getStaticProps: GetStaticProps<{ blog: Blog }> = async (
@@ -44,7 +46,6 @@ export const getStaticProps: GetStaticProps<{ blog: Blog }> = async (
   if (!slug) return { notFound: true };
   const blog = blogList.find((x: Blog) => x.attributes.slug == slug);
   if (!blog) return { notFound: true };
-  console.log(blog);
   return {
     props: {
       blog,
