@@ -1,17 +1,33 @@
 import { authApi } from "@/api-client";
+import { StorageKeys } from "@/constant";
 import { LoginPayload, User } from "@/models";
 import useSWR from "swr";
 import { PublicConfiguration } from "swr/_internal";
 
+function getUserInfo(): User | null {
+  try {
+    return JSON.parse(localStorage.getItem(StorageKeys.USER_INFO)!);
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
 export function useAuth(options?: Partial<PublicConfiguration>) {
   const {
     data: profile,
     error,
     mutate,
-  } = useSWR<User | {}>("/users/me", {
+  } = useSWR("/users/me", {
     dedupingInterval: 60000,
     revalidateOnFocus: false,
     ...options, // giống kiểu truyền prop
+    fallbackData: getUserInfo(),
+    onSuccess(data) {
+      localStorage.setItem(StorageKeys.USER_INFO, JSON.stringify(data));
+    },
+    onError(err: any) {
+      authApi.logout();
+    },
   });
   // khi login logout phải mutate data
   const login = async (payload: LoginPayload) => {
@@ -28,7 +44,9 @@ export function useAuth(options?: Partial<PublicConfiguration>) {
   const firstLoading = profile === undefined && error === undefined;
   const logout = async () => {
     await authApi.logout();
-    await mutate({}, false); // để dữ liệu rỗng và ko gọi lại api
+    await mutate(null, false);
+    localStorage.removeItem(StorageKeys.USER_INFO);
+    // để dữ liệu rỗng và ko gọi lại api
   };
 
   return {

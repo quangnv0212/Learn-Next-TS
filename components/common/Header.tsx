@@ -14,8 +14,7 @@ export default function Header(props: HeaderProps) {
     <header className="flex py-8 text-center">
       <div>Work</div>
       <div>Work 2</div>
-      <div>Work 2</div>
-
+      <button>Work 2</button>
       {!isLoggedIn ? (
         <Link href={"/login"}>Log in</Link>
       ) : (
