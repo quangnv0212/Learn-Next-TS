@@ -1,5 +1,5 @@
 import { authApi } from "@/api-client";
-import { LoginPayload } from "@/models";
+import { LoginPayload, User } from "@/models";
 import useSWR from "swr";
 import { PublicConfiguration } from "swr/_internal";
 
@@ -7,9 +7,8 @@ export function useAuth(options?: Partial<PublicConfiguration>) {
   const {
     data: profile,
     error,
-    isLoading,
     mutate,
-  } = useSWR("/users/me", {
+  } = useSWR<User | {}>("/users/me", {
     dedupingInterval: 60000,
     revalidateOnFocus: false,
     ...options, // giống kiểu truyền prop
@@ -35,7 +34,6 @@ export function useAuth(options?: Partial<PublicConfiguration>) {
   return {
     profile,
     error,
-    isLoading,
     login,
     logout,
     firstLoading,

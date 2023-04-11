@@ -6,7 +6,7 @@ import { useAuth } from "@/hooks";
 import { useRouter } from "next/router";
 
 export function AdminLayout({ children }: LayoutProps) {
-  const { profile, login, logout, isLoading } = useAuth({
+  const { profile, login, logout } = useAuth({
     revalidateOnMount: false,
   });
   const router = useRouter();

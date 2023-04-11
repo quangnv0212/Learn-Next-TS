@@ -8,7 +8,7 @@ type loginProps = {};
 export default function login(props: loginProps) {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const router = useRouter();
-  const { profile, login, logout, isLoading } = useAuth({
+  const { profile, login, logout } = useAuth({
     revalidateOnMount: false,
   });
   const handleLoginClick = async (value: LoginPayload) => {
@@ -27,7 +27,7 @@ export default function login(props: loginProps) {
       console.log("failed to logout");
     }
   };
-
+  if (profile?.username) router.push("/");
   return (
     <div>
       <h1>Login page</h1>
