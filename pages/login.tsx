@@ -12,7 +12,7 @@ export default function login(props: loginProps) {
   const handleLoginClick = async () => {
     try {
       login();
-      // router.push("/swr");
+      router.push("/swr");
     } catch (error) {
       console.log("failed to login", error);
     }
@@ -45,7 +45,7 @@ export default function login(props: loginProps) {
 
       <button
         className="p-2 mx-3 font-bold bg-blue-300 rounded-lg"
-        onClick={() => router.push("/about")}
+        onClick={() => router.push("/swr")}
       >
         Go to about
       </button>
