@@ -1,18 +1,23 @@
-import type { ReactElement, ReactNode } from "react";
-import type { NextPage } from "next";
-import type { AppProps } from "next/app";
+import axiosClient from "@/api-client/axios-client";
 import "../styles/globals.css";
-export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
-  getLayout?: (page: ReactElement) => ReactNode;
-};
-
-type AppPropsWithLayout = AppProps & {
-  Component: NextPageWithLayout;
-};
+import { EmptyLayout } from "@/components/Layout";
+import { AppPropsWithLayout } from "@/models";
+import { SWRConfig } from "swr";
 
 export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   // Use the layout defined at the page level, if available
-  const getLayout = Component.getLayout ?? ((page) => page);
+  const Layout = Component.Layout ?? EmptyLayout;
 
-  return getLayout(<Component {...pageProps} />);
+  return (
+    <SWRConfig
+      value={{
+        fetcher: (url) => axiosClient.get(url),
+        shouldRetryOnError: false,
+      }}
+    >
+      <Layout>
+        <Component {...pageProps}></Component>
+      </Layout>
+    </SWRConfig>
+  );
 }

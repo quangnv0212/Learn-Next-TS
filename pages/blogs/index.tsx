@@ -6,11 +6,12 @@ import BlogCard from "@/components/BlogCard";
 import { Blog } from "@/models";
 import { Pagination } from "antd";
 import type { PaginationProps } from "antd";
-type indexProps = {
+import { MainLayout } from "@/components/Layout";
+type BlogPageProps = {
   blogs: Blog[];
 };
 
-export default function AlbumPage({ blogs }: indexProps) {
+export default function BlogPage({ blogs }: BlogPageProps) {
   const [listOfBlogs, setListOfBlogs] = useState<Blog[]>(blogs);
   const [numberOfBlog, setNumberOfBlog] = useState<number>();
   const onShowSizeChange: PaginationProps["onShowSizeChange"] = (
@@ -42,21 +43,23 @@ export default function AlbumPage({ blogs }: indexProps) {
 
   return (
     <>
-      <h1 className="text-5xl font-bold text-center">Blog Page</h1>
-      <div className="grid gap-10 mt-10 lg:gap-10 md:grid-cols-2 xl:grid-cols-3 ">
-        {listOfBlogs.map((blog) => (
-          <BlogCard key={blog.id} blog={blog}></BlogCard>
-        ))}
-      </div>
-      <Pagination
-        showSizeChanger={true}
-        onChange={onChange}
-        pageSizeOptions={[2, 3, 4]}
-        defaultCurrent={1}
-        defaultPageSize={2}
-        onShowSizeChange={onShowSizeChange}
-        total={numberOfBlog}
-      />
+      <>
+        <h1 className="text-5xl font-bold text-center">Blog Page</h1>
+        <div className="grid gap-10 mt-10 lg:gap-10 md:grid-cols-2 xl:grid-cols-3 ">
+          {listOfBlogs.map((blog) => (
+            <BlogCard key={blog.id} blog={blog}></BlogCard>
+          ))}
+        </div>
+        <Pagination
+          showSizeChanger={true}
+          onChange={onChange}
+          pageSizeOptions={[2, 3, 4]}
+          defaultCurrent={1}
+          defaultPageSize={2}
+          onShowSizeChange={onShowSizeChange}
+          total={numberOfBlog}
+        />
+      </>
     </>
   );
 }
@@ -74,5 +77,6 @@ export const getStaticProps: GetStaticProps<{ blogs: Blog[] }> = async (
     },
   };
 };
+BlogPage.Layout = MainLayout;
 
 // Read all markdown file => parse markdown file to JS object (greymatter) => pass result to component props
