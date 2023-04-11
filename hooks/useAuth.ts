@@ -1,4 +1,5 @@
 import { authApi } from "@/api-client";
+import { LoginPayload } from "@/models";
 import useSWR from "swr";
 import { PublicConfiguration } from "swr/_internal";
 
@@ -14,12 +15,15 @@ export function useAuth(options?: Partial<PublicConfiguration>) {
     ...options, // giống kiểu truyền prop
   });
   // khi login logout phải mutate data
-  const login = async () => {
-    await authApi.login({
-      identifier: "quangnv.0212@gmail.com",
-      password: "ngulol69",
-    });
-    await mutate(); //chưa có data tạm thì để rỗng cũng ok
+  const login = async (payload: LoginPayload) => {
+    try {
+      await authApi.login({
+        ...payload,
+      });
+      await mutate(); //chưa có data tạm thì để rỗng cũng ok
+    } catch (error) {
+      console.log("error");
+    }
   };
   //check xem lúc vừa vào trang để get API. Cái này giống kiểu initState. Lưu ý ko dùng undefined cho các mutate vì nó là set lại state ban đầu rồi
   const firstLoading = profile === undefined && error === undefined;
